@@ -223,76 +223,54 @@
 </section>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('attendance-form');
+    const form = document.getElementById('attendance-form') || document.querySelector('form');
     const formCard = document.getElementById('form-card');
     const successCard = document.getElementById('form-success-state');
-    const submitBtn = document.getElementById('submit-btn');
-    const btnIcon = document.getElementById('btn-icon');
-    const btnText = document.getElementById('btn-text');
     const resetBtn = document.getElementById('reset-register-btn');
 
-    // Reemplaza esta URL con la tuya de Google Apps Script
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWYSTFI0fe8CFXLThX8pjAdi035rRJPh6X9nmYPtp5dpBZiNlPu-hUSuIVffiIHhzc/exec';
+    // Tu URL de Google Apps Script
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbze3o8Da59m4x0d3RhQt8oHnYLo9rBVn8Cx6xshdgD4Ws9pFfOophxYiXot-1yFe2ic/exec';
 
     if (form) {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Feedback de carga
-        submitBtn.disabled = true;
-        submitBtn.classList.add('opacity-90', 'cursor-wait');
-        if (btnIcon) {
-          btnIcon.textContent = 'progress_activity';
-          btnIcon.classList.add('animate-spin');
-        }
-        if (btnText) btnText.textContent = 'Registrando asistencia...';
-
-        // Recopilar datos del formulario
+        // 1. Recolectar datos del formulario
         const formData = new FormData(form);
 
-        // Envío en segundo plano
+        // 2. Enviar a Google Apps Script sin interrumpir la animación
         fetch(SCRIPT_URL, {
           method: 'POST',
+          mode: 'no-cors', // Evita bloqueos de seguridad de navegador
           body: formData
         })
         .then(() => {
-          // Restaurar botón
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('opacity-90', 'cursor-wait');
-          if (btnIcon) {
-            btnIcon.textContent = 'check_circle';
-            btnIcon.classList.remove('animate-spin');
-          }
-          if (btnText) btnText.textContent = 'Confirmar mi asistencia';
-
-          // Limpiar el formulario
-          form.reset();
-
-          // Ocultar formulario y mostrar pantalla de agradecimiento
-          if (formCard) formCard.classList.add('hidden');
-          if (successCard) successCard.classList.remove('hidden');
-
-          // Desplazar suavemente a la pantalla de agradecimiento
-          if (successCard) successCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          console.log('Registro enviado con éxito');
         })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Ocurrió un error al guardar los datos. Por favor, intenta de nuevo.');
-          submitBtn.disabled = false;
-          if (btnText) btnText.textContent = 'Confirmar mi asistencia';
+        .catch(err => {
+          console.error('Error al registrar:', err);
         });
+
+        // 3. Ejecutar la transición a la pantalla de agradecimiento / animación de Stitch
+        if (formCard) formCard.classList.add('hidden');
+        if (successCard) {
+          successCard.classList.remove('hidden');
+          successCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Limpiar campos del formulario para el siguiente registro
+        form.reset();
       });
     }
 
-    // Evento del botón para registrar otra persona
+    // Botón para volver a registrar a otra persona
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         if (successCard) successCard.classList.add('hidden');
-        if (formCard) formCard.classList.remove('hidden');
-        
-        const firstInput = document.getElementById('nombre-asistente');
-        if (firstInput) firstInput.focus();
-        if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (formCard) {
+          formCard.classList.remove('hidden');
+          formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       });
     }
   });
