@@ -125,48 +125,48 @@
 <h2 class="font-headline-lg text-primary">Formulario de Asistencia</h2>
 <p class="font-body-md text-on-surface-variant">Asegure su lugar y el de su familia para nuestro culto navideño especial.</p>
 </div>
-<form action="https://script.google.com/macros/s/AKfycbz5rCGhzFTewQRNmzDU6MMf71TXoh2rZJKHt7sPz8aUUgrWvkyJ0aIEC8YiHJ6uXO3q/exec" method="POST">
+<form id="attendance form">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
     
     <!-- Campo: Nombre -->
-    <div class="flex flex-col gap-space-xs md:col-span-2">
-      <label class="text-label-md text-on-surface font-medium">Nombre y Apellido</label>
-      <input name="nombre" class="px-space-md py-space-sm rounded-xl bg-surface-container-low border border-outline-variant/40 focus:border-secondary focus:outline-none text-body-md text-on-surface" placeholder="Ej. Juan Pérez" required="" type="text">
-    </div>
+<div class="flex flex-col gap-space-xs md:col-span-2">
+  <label class="text-label-md text-on-surface font-medium">Nombre y Apellido</label>
+  <input id="nombre-asistente" name="nombre" class="px-space-md py-space-sm rounded-xl bg-surface-container-low border border-outline-variant/40 focus:border-secondary focus:outline-none text-body-md text-on-surface" placeholder="Ej. Juan Pérez" required="" type="text">
+</div>
 
     <!-- Campo: Número de asistentes -->
-    <div class="flex flex-col gap-space-xs">
-      <label class="text-label-md text-on-surface font-medium">Número de asistentes</label>
-      <select name="asistentes" class="px-space-md py-space-sm rounded-xl bg-surface-container-low border border-outline-variant/40 focus:border-secondary focus:outline-none text-body-md text-on-surface">
-        <option value="1 persona">1 persona</option>
-        <option value="2 personas (Pareja)" selected="">2 personas (Pareja)</option>
-        <option value="3 personas">3 personas</option>
-        <option value="4 personas">4 personas</option>
-        <option value="5 o más personas (Familia)">5 o más personas (Familia)</option>
-      </select>
-    </div>
+<div class="flex flex-col gap-space-xs">
+  <label class="text-label-md text-on-surface font-medium">Número de asistentes</label>
+  <select id="asistentes" name="asistentes" class="px-space-md py-space-sm rounded-xl bg-surface-container-low border border-outline-variant/40 focus:border-secondary focus:outline-none text-body-md text-on-surface">
+    <option value="1 persona">1 persona</option>
+    <option value="2 personas (Pareja)" selected="">2 personas (Pareja)</option>
+    <option value="3 personas">3 personas</option>
+    <option value="4 personas">4 personas</option>
+    <option value="5 o más personas (Familia)">5 o más personas (Familia)</option>
+  </select>
+</div>
 
     <!-- Campo: Cantidad de niños -->
-    <div class="flex flex-col gap-space-xs">
-      <label class="text-label-md text-on-surface font-medium">Cantidad de niños que asistirán</label>
-      <select name="ninos" class="px-space-md py-space-sm rounded-xl bg-surface-container-low border border-outline-variant/40 focus:border-secondary focus:outline-none text-body-md text-on-surface">
-        <option value="0 niños" selected="">0 niños</option>
-        <option value="1 niño">1 niño</option>
-        <option value="2 niños">2 niños</option>
-        <option value="3 niños">3 niños</option>
-        <option value="4 o más niños">4 o más niños</option>
-      </select>
-    </div>
+<div class="flex flex-col gap-space-xs">
+  <label class="text-label-md text-on-surface font-medium">Cantidad de niños que asistirán</label>
+  <select id="ninos" name="ninos" class="px-space-md py-space-sm rounded-xl bg-surface-container-low border border-outline-variant/40 focus:border-secondary focus:outline-none text-body-md text-on-surface">
+    <option value="0 niños" selected="">0 niños</option>
+    <option value="1 niño">1 niño</option>
+    <option value="2 niños">2 niños</option>
+    <option value="3 niños">3 niños</option>
+    <option value="4 o más niños">4 o más niños</option>
+  </select>
+</div>
 
   </div>
 
-  <!-- Botón de Envío -->
-  <div class="pt-space-md">
-    <button class="w-full py-space-md px-space-xl rounded-xl bg-primary text-on-primary font-label-md font-bold hover:bg-primary-container transition-all shadow-md flex items-center justify-center gap-space-xs" type="submit">
-      <span class="material-symbols-outlined text-[18px]">check_circle</span>
-      <span>Confirmar mi asistencia</span>
-    </button>
-  </div>
+ <!-- Botón de Envío -->
+<div class="pt-space-md">
+  <button id="submit-btn" class="w-full py-space-md px-space-xl rounded-xl bg-primary text-on-primary font-label-md font-bold hover:bg-primary-container transition-all shadow-md flex items-center justify-center gap-space-xs" type="submit">
+    <span id="btn-icon" class="material-symbols-outlined text-[18px]">check_circle</span>
+    <span id="btn-text">Confirmar mi asistencia</span>
+  </button>
+</div>
 </form></div>
 <!-- Celebratory Christmas Success Card (Initially Hidden) -->
 <div class="hidden relative bg-gradient-to-b from-primary-container to-primary text-on-primary p-space-xl rounded-xl shadow-2xl border border-tertiary-fixed/30 text-center overflow-hidden animate-success-pop" id="form-success-state">
@@ -231,51 +231,68 @@
     const btnText = document.getElementById('btn-text');
     const resetBtn = document.getElementById('reset-register-btn');
 
+    // Reemplaza esta URL con la tuya de Google Apps Script
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWYSTFI0fe8CFXLThX8pjAdi035rRJPh6X9nmYPtp5dpBZiNlPu-hUSuIVffiIHhzc/exec';
+
     if (form) {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Loading state
+        // Feedback de carga
         submitBtn.disabled = true;
         submitBtn.classList.add('opacity-90', 'cursor-wait');
-        btnIcon.textContent = 'progress_activity';
-        btnIcon.classList.add('animate-spin');
-        btnText.textContent = 'Registrando asistencia...';
+        if (btnIcon) {
+          btnIcon.textContent = 'progress_activity';
+          btnIcon.classList.add('animate-spin');
+        }
+        if (btnText) btnText.textContent = 'Registrando asistencia...';
 
-        // Simulate secure background persistence
-        setTimeout(() => {
-          // Reset button state
+        // Recopilar datos del formulario
+        const formData = new FormData(form);
+
+        // Envío en segundo plano
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: formData
+        })
+        .then(() => {
+          // Restaurar botón
           submitBtn.disabled = false;
           submitBtn.classList.remove('opacity-90', 'cursor-wait');
-          btnIcon.textContent = 'check_circle';
-          btnIcon.classList.remove('animate-spin');
-          btnText.textContent = 'Confirmar mi asistencia';
+          if (btnIcon) {
+            btnIcon.textContent = 'check_circle';
+            btnIcon.classList.remove('animate-spin');
+          }
+          if (btnText) btnText.textContent = 'Confirmar mi asistencia';
 
-          // Reset the form inputs
+          // Limpiar el formulario
           form.reset();
 
-          // Transition to celebratory success state
-          formCard.classList.add('hidden');
-          successCard.classList.remove('hidden');
+          // Ocultar formulario y mostrar pantalla de agradecimiento
+          if (formCard) formCard.classList.add('hidden');
+          if (successCard) successCard.classList.remove('hidden');
 
-          // Smooth scroll into focus
-          successCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 650);
+          // Desplazar suavemente a la pantalla de agradecimiento
+          if (successCard) successCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Ocurrió un error al guardar los datos. Por favor, intenta de nuevo.');
+          submitBtn.disabled = false;
+          if (btnText) btnText.textContent = 'Confirmar mi asistencia';
+        });
       });
     }
 
+    // Evento del botón para registrar otra persona
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
-        // Hide success card & show form card
-        successCard.classList.add('hidden');
-        formCard.classList.remove('hidden');
+        if (successCard) successCard.classList.add('hidden');
+        if (formCard) formCard.classList.remove('hidden');
         
-        // Focus first field
         const firstInput = document.getElementById('nombre-asistente');
-        if (firstInput) {
-          firstInput.focus();
-        }
-        formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (firstInput) firstInput.focus();
+        if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     }
   });
